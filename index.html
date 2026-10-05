@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitLife & Fuel</title>
+
+    <script>
+      // Set config BEFORE loading the Tailwind CDN. This is the safest order.
+      window.tailwind = window.tailwind || {};
+      window.tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981',
+                600: '#059669', 700: '#047857'
+              }
+            }
+          }
+        }
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+      .dark ::-webkit-scrollbar-thumb { background: #475569; }
+      .calendar-grid-cell:hover { transform: scale(1.06); z-index: 10; }
+      .calendar-grid-cell { transition: transform .15s ease; }
+    </style>
+  </head>
+
+  <body
+    class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden"
+  >
+    <!-- ====================== ONBOARDING MODAL ====================== -->
+    <div
+      id="onboarding-modal"
+      class="fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-4 hidden"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl max-w-lg w-full p-6"
+      >
+        <div class="text-center mb-6">
+          <div
+            class="w-16 h-16 bg-emerald-500/10 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl"
+          >
+            <i class="fa-solid fa-dumbbell"></i>
+          </div>
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">
+            Welcome to FitLife & Fuel!
+          </h2>
+          <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+            Let's personalize your fitness experience.
+          </p>
+        </div>
+        <form id="onboarding-form" class="space-y-4">
+          <div>
+            <label
+              class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Your Full Name</label
+            >
+            <input
+              type="text"
+              id="onboard-name"
+              required
+              placeholder="e.g. Alex Rivera"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Primary Fitness Goal</label
+            >
+            <select
+              id="onboard-goal"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white"
+            >
+              <option value="Build Muscle">
+                💪 Build Muscle &amp; Strength
+              </option>
+              <option value="Lose Weight">🔥 Fat Loss &amp; Toning</option>
+              <option value="Athletic Performance">
+                ⚡ Athletic Performance
+              </option>
+              <option value="Self-Improvement">
+                🧠 Overall Self-Improvement
+              </option>
+            </select>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >Daily Calories</label
+              >
+              <input
+                type="number"
+                id="onboard-calories"
+                value="2300"
+                min="1000"
+                max="8000"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white text-sm"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >Protein (g)</label
+              >
+              <input
+                type="number"
+                id="onboard-protein"
+                value="160"
+                min="30"
+                max="400"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white text-sm"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg text-sm mt-2"
+          >
+            Launch My Dashboard <i class="fa-solid fa-arrow-right ml-2"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ====================== EDIT PROFILE MODAL ====================== -->
+    <div
+      id="edit-profile-modal"
+      class="fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-4 hidden"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl max-w-md w-full p-6"
+      >
+        <div class="flex justify-between items-center mb-5">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+            <i class="fa-solid fa-user-pen text-emerald-500 mr-2"></i>Edit
+            Profile
+          </h3>
+          <button
+            onclick="closeModal('edit-profile-modal')"
+            class="text-slate-400 hover:text-slate-600 text-xl"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="edit-profile-form" class="space-y-4">
+          <div>
+            <label
+              class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Name</label
+            >
+            <input
+              type="text"
+              id="edit-name"
+              required
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Goal</label
+            >
+            <select
+              id="edit-goal"
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm"
+            >
+              <option value="Build Muscle">
+                💪 Build Muscle &amp; Strength
+              </option>
+              <option value="Lose Weight">🔥 Fat Loss &amp; Toning</option>
+              <option value="Athletic Performance">
+                ⚡ Athletic Performance
+              </option>
+              <option value="Self-Improvement">
+                🧠 Overall Self-Improvement
+              </option>
+            </select>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >Calories</label
+              >
+              <input
+                type="number"
+                id="edit-calories"
+                min="1000"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >Protein (g)</label
+              >
+              <input
+                type="number"
+                id="edit-protein"
+                min="30"
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm"
+              />
+            </div>
+          </div>
+          <div class="flex space-x-3 pt-3">
+            <button
+              type="button"
+              onclick="closeModal('edit-profile-modal')"
+              class="flex-1 py-2.5 border border-slate-300 dark:border-slate-600 rounded-xl text-xs font-semibold"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ====================== HEADER ====================== -->
+    <header
+      class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between z-30 shrink-0"
+    >
+      <div class="flex items-center space-x-3">
+        <button
+          onclick="toggleSidebar()"
+          class="lg:hidden text-slate-600 dark:text-slate-300 p-2"
+        >
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div
+          class="w-10 h-10 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white rounded-xl flex items-center justify-center text-xl"
+        >
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-slate-900 dark:text-white text-base">
+            FitLife &amp; Fuel
+          </h1>
+          <p
+            class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase"
+          >
+            Dietary &amp; Fitness Hub
+          </p>
+        </div>
+      </div>
+
+      <div
+        class="hidden md:flex items-center space-x-3 bg-slate-50 dark:bg-slate-700/50 px-4 py-1.5 rounded-2xl border border-slate-200 dark:border-slate-700"
+      >
+        <div
+          id="user-avatar-badge"
+          class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm"
+        >
+          A
+        </div>
+        <div class="text-xs">
+          <div
+            id="nav-greeting"
+            class="font-bold text-slate-800 dark:text-white"
+          >
+            Welcome!
+          </div>
+          <div id="nav-goal-badge" class="text-slate-500 dark:text-slate-400">
+            Goal: —
+          </div>
+        </div>
+        <button
+          onclick="openEditProfile()"
+          class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
+        >
+          Edit
+        </button>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <button
+          onclick="toggleTheme()"
+          id="theme-toggle-btn"
+          class="relative inline-flex items-center h-9 w-16 rounded-full p-1 bg-slate-200 dark:bg-slate-700"
+        >
+          <span
+            id="theme-toggle-dot"
+            class="inline-block w-7 h-7 rounded-full bg-white dark:bg-slate-900 shadow-md transform transition-transform translate-x-0 dark:translate-x-7 flex items-center justify-center text-xs"
+          >
+            <i id="theme-icon" class="fa-solid fa-sun text-amber-500"></i>
+          </span>
+        </button>
+        <button
+          onclick="openEditProfile()"
+          class="md:hidden w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm"
+        >
+          <span id="user-avatar-badge-mobile">A</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ====================== BODY: SIDEBAR + MAIN ====================== -->
+    <div class="flex flex-1 overflow-hidden relative">
+      <aside
+        id="sidebar"
+        class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shrink-0"
+      >
+        <div class="p-4 space-y-1">
+          <p
+            class="px-3 text-[11px] font-bold tracking-wider text-slate-400 uppercase mb-2"
+          >
+            Navigation
+          </p>
+          <button
+            onclick="switchView('calories')"
+            id="nav-calories"
+            class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all"
+          >
+            <i class="fa-solid fa-utensils w-5 text-center"></i
+            ><span>Fuel Tracker</span>
+          </button>
+          <button
+            onclick="switchView('calendar')"
+            id="nav-calendar"
+            class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all"
+          >
+            <i class="fa-solid fa-calendar-days w-5 text-center"></i
+            ><span>365-Day Journal</span>
+          </button>
+          <button
+            onclick="switchView('showroom')"
+            id="nav-showroom"
+            class="nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all"
+          >
+            <i class="fa-solid fa-fire w-5 text-center"></i
+            ><span>Gym Showroom</span>
+          </button>
+        </div>
+
+        <div
+          class="mt-auto p-4 m-3 bg-slate-50 dark:bg-slate-700/40 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-3"
+        >
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-bold text-slate-700 dark:text-slate-200"
+              >Daily Fuel</span
+            >
+            <span
+              id="side-cals-count"
+              class="text-emerald-600 dark:text-emerald-400 font-extrabold"
+              >0 / 2300 kcal</span
+            >
+          </div>
+          <div
+            class="w-full bg-slate-200 dark:bg-slate-600 h-2 rounded-full overflow-hidden"
+          >
+            <div
+              id="side-cals-bar"
+              class="bg-emerald-500 h-full rounded-full transition-all duration-500"
+              style="width:0%"
+            ></div>
+          </div>
+          <div
+            class="grid grid-cols-3 gap-1 text-[10px] text-center text-slate-500 dark:text-slate-400"
+          >
+            <div>
+              P:
+              <span
+                id="side-p"
+                class="font-bold text-slate-800 dark:text-slate-200"
+                >0g</span
+              >
+            </div>
+            <div>
+              C:
+              <span
+                id="side-c"
+                class="font-bold text-slate-800 dark:text-slate-200"
+                >0g</span
+              >
+            </div>
+            <div>
+              F:
+              <span
+                id="side-f"
+                class="font-bold text-slate-800 dark:text-slate-200"
+                >0g</span
+              >
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main
+        id="main-content"
+        class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-900 p-4 sm:p-6 space-y-6"
+      >
+        <!-- ============ VIEW: CALORIES ============ -->
+        <section id="view-calories" class="view-section space-y-6">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700"
+          >
+            <div>
+              <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">
+                Fuel &amp; Calorie Tracker
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Log meals, balance macros, fuel your gains.
+              </p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button
+                onclick="changeLogDate(-1)"
+                class="p-2 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300"
+              >
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <span
+                id="current-log-date"
+                class="text-xs font-bold px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-xl"
+                >Today</span
+              >
+              <button
+                onclick="changeLogDate(1)"
+                class="p-2 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300"
+              >
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div
+              class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold uppercase text-slate-400"
+                  >Calories</span
+                >
+                <i class="fa-solid fa-fire text-amber-500"></i>
+              </div>
+              <div class="my-2 text-center">
+                <div
+                  id="macro-calories-val"
+                  class="text-3xl font-black text-slate-900 dark:text-white"
+                >
+                  0
+                </div>
+                <p class="text-xs text-slate-400">
+                  Target: <span id="target-calories-text">2300</span> kcal
+                </p>
+              </div>
+              <div
+                class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden mt-2"
+              >
+                <div
+                  id="bar-calories"
+                  class="bg-amber-500 h-full rounded-full transition-all"
+                  style="width:0%"
+                ></div>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold uppercase text-slate-400"
+                  >Protein</span
+                >
+                <i class="fa-solid fa-drumstick-bite text-blue-500"></i>
+              </div>
+              <div class="my-2 text-center">
+                <div class="text-2xl font-black text-slate-900 dark:text-white">
+                  <span id="macro-protein-val">0</span>g
+                </div>
+                <p class="text-xs text-slate-400">
+                  Goal: <span id="target-protein-text">160</span>g
+                </p>
+              </div>
+              <div
+                class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden mt-2"
+              >
+                <div
+                  id="bar-protein"
+                  class="bg-blue-500 h-full rounded-full transition-all"
+                  style="width:0%"
+                ></div>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold uppercase text-slate-400"
+                  >Carbs</span
+                >
+                <i class="fa-solid fa-wheat-awn text-emerald-500"></i>
+              </div>
+              <div class="my-2 text-center">
+                <div class="text-2xl font-black text-slate-900 dark:text-white">
+                  <span id="macro-carbs-val">0</span>g
+                </div>
+                <p class="text-xs text-slate-400">Target: 220g</p>
+              </div>
+              <div
+                class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden mt-2"
+              >
+                <div
+                  id="bar-carbs"
+                  class="bg-emerald-500 h-full rounded-full transition-all"
+                  style="width:0%"
+                ></div>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold uppercase text-slate-400"
+                  >Fats</span
+                >
+                <i class="fa-solid fa-egg text-purple-500"></i>
+              </div>
+              <div class="my-2 text-center">
+                <div class="text-2xl font-black text-slate-900 dark:text-white">
+                  <span id="macro-fats-val">0</span>g
+                </div>
+                <p class="text-xs text-slate-400">Target: 70g</p>
+              </div>
+              <div
+                class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden mt-2"
+              >
+                <div
+                  id="bar-fats"
+                  class="bg-purple-500 h-full rounded-full transition-all"
+                  style="width:0%"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <h3 class="font-extrabold text-slate-900 dark:text-white text-base">
+              Meal Entries
+            </h3>
+            <button
+              onclick="openModal('add-meal-modal')"
+              class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs flex items-center space-x-2"
+            >
+              <i class="fa-solid fa-plus"></i><span>Log Food Item</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div
+              class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-3"
+            >
+              <div
+                class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-3"
+              >
+                <div class="flex items-center space-x-2">
+                  <span class="text-amber-500"
+                    ><i class="fa-solid fa-sun"></i
+                  ></span>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm">
+                    Breakfast
+                  </h4>
+                </div>
+                <span
+                  id="cals-breakfast"
+                  class="text-xs font-bold text-slate-400"
+                  >0 kcal</span
+                >
+              </div>
+              <div id="meal-list-breakfast" class="space-y-2 text-xs"></div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-3"
+            >
+              <div
+                class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-3"
+              >
+                <div class="flex items-center space-x-2">
+                  <span class="text-emerald-500"
+                    ><i class="fa-solid fa-cloud-sun"></i
+                  ></span>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm">
+                    Lunch
+                  </h4>
+                </div>
+                <span id="cals-lunch" class="text-xs font-bold text-slate-400"
+                  >0 kcal</span
+                >
+              </div>
+              <div id="meal-list-lunch" class="space-y-2 text-xs"></div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-3"
+            >
+              <div
+                class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-3"
+              >
+                <div class="flex items-center space-x-2">
+                  <span class="text-indigo-500"
+                    ><i class="fa-solid fa-moon"></i
+                  ></span>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm">
+                    Dinner
+                  </h4>
+                </div>
+                <span id="cals-dinner" class="text-xs font-bold text-slate-400"
+                  >0 kcal</span
+                >
+              </div>
+              <div id="meal-list-dinner" class="space-y-2 text-xs"></div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 space-y-3"
+            >
+              <div
+                class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-3"
+              >
+                <div class="flex items-center space-x-2">
+                  <span class="text-rose-500"
+                    ><i class="fa-solid fa-cookie-bite"></i
+                  ></span>
+                  <h4 class="font-bold text-slate-900 dark:text-white text-sm">
+                    Snacks
+                  </h4>
+                </div>
+                <span id="cals-snack" class="text-xs font-bold text-slate-400"
+                  >0 kcal</span
+                >
+              </div>
+              <div id="meal-list-snack" class="space-y-2 text-xs"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ VIEW: CALENDAR ============ -->
+        <section id="view-calendar" class="view-section hidden space-y-6">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700"
+          >
+            <div>
+              <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">
+                365-Day Fitness &amp; Habit Journal
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Click any day to log workouts, notes, sleep and mindset wins.
+              </p>
+            </div>
+            <div class="flex items-center space-x-3">
+              <select
+                id="calendar-month-select"
+                class="px-3 py-2 bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-xs font-bold text-slate-800 dark:text-white"
+              ></select>
+              <span
+                id="calendar-year-badge"
+                class="text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-3 py-2 rounded-xl"
+                >Year ----</span
+              >
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div
+              class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center space-x-4"
+            >
+              <div
+                class="w-12 h-12 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center text-xl"
+              >
+                <i class="fa-solid fa-fire"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400 font-medium">
+                  Logged Days
+                </div>
+                <div
+                  id="journal-total-logged"
+                  class="text-xl font-black text-slate-900 dark:text-white"
+                >
+                  0 / 365
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center space-x-4"
+            >
+              <div
+                class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-xl flex items-center justify-center text-xl"
+              >
+                <i class="fa-solid fa-trophy"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400 font-medium">
+                  Current Streak
+                </div>
+                <div
+                  id="journal-streak"
+                  class="text-xl font-black text-slate-900 dark:text-white"
+                >
+                  0 Days
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center space-x-4"
+            >
+              <div
+                class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center text-xl"
+              >
+                <i class="fa-solid fa-heart-pulse"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400 font-medium">
+                  Monthly Rate
+                </div>
+                <div
+                  id="journal-active-rate"
+                  class="text-xl font-black text-slate-900 dark:text-white"
+                >
+                  0%
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700"
+          >
+            <div
+              class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-slate-400 uppercase mb-3"
+            >
+              <div>Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
+            </div>
+            <div id="calendar-days-grid" class="grid grid-cols-7 gap-2.5"></div>
+          </div>
+        </section>
+
+        <!-- ============ VIEW: SHOWROOM ============ -->
+        <section id="view-showroom" class="view-section hidden space-y-6">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700"
+          >
+            <div>
+              <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">
+                Gym Showroom Feed
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Post gym PRs, progress selfies, and hype your friends up!
+              </p>
+            </div>
+            <button
+              onclick="openModal('create-post-modal')"
+              class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs flex items-center space-x-2 shrink-0"
+            >
+              <i class="fa-solid fa-plus"></i><span>Post to Showroom</span>
+            </button>
+          </div>
+          <div
+            id="showroom-feed-list"
+            class="max-w-2xl mx-auto space-y-5"
+          ></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ====================== COACH FRANK ====================== -->
+    <div class="fixed bottom-5 left-5 z-50 flex flex-col items-start">
+      <div
+        id="coach-chat-drawer"
+        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl w-80 sm:w-96 h-[480px] flex flex-col hidden mb-3 overflow-hidden"
+      >
+        <div
+          class="p-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex justify-between items-center"
+        >
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-base"
+            >
+              🏋️
+            </div>
+            <div>
+              <h4 class="font-extrabold text-sm">Coach Frank</h4>
+              <p class="text-[10px] text-emerald-100">AI Fitness Mentor</p>
+            </div>
+          </div>
+          <button onclick="closeCoach()" class="text-white/80 hover:text-white">
+            &times;
+          </button>
+        </div>
+        <div
+          class="p-2 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-100 dark:border-slate-700 flex space-x-1.5 overflow-x-auto text-[10px]"
+        >
+          <button
+            onclick="quickPrompt('Give me a 4-day muscle building split')"
+            class="px-2.5 py-1 bg-white dark:bg-slate-700 rounded-full whitespace-nowrap"
+          >
+            🏋️ 4-Day Split
+          </button>
+          <button
+            onclick="quickPrompt('How do I calculate my protein needs?')"
+            class="px-2.5 py-1 bg-white dark:bg-slate-700 rounded-full whitespace-nowrap"
+          >
+            🥩 Protein
+          </button>
+          <button
+            onclick="quickPrompt('Best post-workout meal ideas?')"
+            class="px-2.5 py-1 bg-white dark:bg-slate-700 rounded-full whitespace-nowrap"
+          >
+            🥑 Post-Workout
+          </button>
+        </div>
+        <div
+          id="coach-messages-container"
+          class="flex-1 p-4 overflow-y-auto space-y-3 text-xs bg-slate-50/50 dark:bg-slate-900/50"
+        >
+          <div class="flex items-start space-x-2">
+            <div
+              class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0"
+            >
+              F
+            </div>
+            <div
+              class="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 max-w-[82%]"
+            >
+              Hey champ! I'm <strong>Coach Frank</strong>. Ask me anything about
+              your split, macros, or recovery. Let's work! 💪
+            </div>
+          </div>
+        </div>
+        <div
+          class="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 flex items-center space-x-2"
+        >
+          <input
+            type="text"
+            id="coach-user-input"
+            onkeypress="if(event.key==='Enter'){event.preventDefault();askCoach();}"
+            placeholder="Ask Coach Frank..."
+            class="flex-1 px-3 py-2 text-xs border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+          />
+          <button
+            onclick="askCoach()"
+            class="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl"
+          >
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+
+      <button
+        onclick="toggleCoach()"
+        class="w-14 h-14 bg-gradient-to-tr from-emerald-600 to-teal-500 text-white rounded-full shadow-2xl flex items-center justify-center text-2xl border-2 border-white dark:border-slate-700"
+      >
+        🏋️
+      </button>
+    </div>
+
+    <!-- ====================== ADD MEAL MODAL ====================== -->
+    <div
+      id="add-meal-modal"
+      class="fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-4 hidden"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl max-w-sm w-full p-6"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-extrabold text-slate-900 dark:text-white text-base">
+            Log Food Entry
+          </h3>
+          <button
+            onclick="closeModal('add-meal-modal')"
+            class="text-slate-400 text-xl"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="add-meal-form" class="space-y-3">
+          <div>
+            <label
+              class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Meal</label
+            >
+            <select
+              id="meal-type"
+              class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            >
+              <option value="breakfast">🌅 Breakfast</option>
+              <option value="lunch">☀️ Lunch</option>
+              <option value="dinner">🌙 Dinner</option>
+              <option value="snack">🍎 Snack</option>
+            </select>
+          </div>
+          <div>
+            <label
+              class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Name</label
+            >
+            <input
+              type="text"
+              id="meal-name"
+              required
+              placeholder="Chicken Rice Bowl"
+              class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >Calories</label
+              >
+              <input
+                type="number"
+                id="meal-cals"
+                required
+                min="0"
+                placeholder="520"
+                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >Protein (g)</label
+              >
+              <input
+                type="number"
+                id="meal-protein"
+                required
+                min="0"
+                placeholder="42"
+                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >Carbs (g)</label
+              >
+              <input
+                type="number"
+                id="meal-carbs"
+                required
+                min="0"
+                placeholder="45"
+                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-xs font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >Fats (g)</label
+              >
+              <input
+                type="number"
+                id="meal-fats"
+                required
+                min="0"
+                placeholder="12"
+                class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold"
+          >
+            Save Food Item
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ====================== JOURNAL MODAL ====================== -->
+    <div
+      id="journal-modal"
+      class="fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-4 hidden"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto"
+      >
+        <div
+          class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-3"
+        >
+          <div>
+            <h3 class="font-extrabold text-slate-900 dark:text-white text-base">
+              Journal Entry
+            </h3>
+            <p
+              id="journal-modal-date"
+              class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold"
+            >
+              Date
+            </p>
+          </div>
+          <button
+            onclick="closeModal('journal-modal')"
+            class="text-slate-400 text-xl"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="journal-form" class="space-y-4 text-xs">
+          <div>
+            <label
+              class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >🏋️ Workout Log</label
+            >
+            <textarea
+              id="journal-workout"
+              rows="3"
+              placeholder="Bench Press 185lbs (4x8)..."
+              class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            ></textarea>
+          </div>
+          <div>
+            <label
+              class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >🧠 Mindset Wins</label
+            >
+            <textarea
+              id="journal-mindset"
+              rows="2"
+              placeholder="Read 20 pages, 8h sleep..."
+              class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            ></textarea>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >💧 Water (L)</label
+              >
+              <input
+                type="number"
+                step="0.5"
+                id="journal-water"
+                value="2.5"
+                class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+              />
+            </div>
+            <div>
+              <label
+                class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+                >💤 Sleep (h)</label
+              >
+              <input
+                type="number"
+                step="0.5"
+                id="journal-sleep"
+                value="7.5"
+                class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >⭐ Mood</label
+            >
+            <select
+              id="journal-mood"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            >
+              <option>🔥 Amazing - Crushed it!</option>
+              <option>💪 Good - Made progress</option>
+              <option>👍 Solid - Maintained discipline</option>
+              <option>😴 Low energy / Rest day</option>
+            </select>
+          </div>
+          <div class="flex space-x-2 pt-2">
+            <button
+              type="button"
+              onclick="clearJournal()"
+              class="px-3 py-2 bg-rose-50 text-rose-600 rounded-xl font-bold"
+            >
+              Clear
+            </button>
+            <button
+              type="submit"
+              class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl"
+            >
+              Save Day Log
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ====================== CREATE POST MODAL ====================== -->
+    <div
+      id="create-post-modal"
+      class="fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-4 hidden"
+    >
+      <div
+        class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4"
+      >
+        <div
+          class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-3"
+        >
+          <h3 class="font-extrabold text-slate-900 dark:text-white text-base">
+            New Showroom Post
+          </h3>
+          <button
+            onclick="closeModal('create-post-modal')"
+            class="text-slate-400 text-xl"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="create-post-form" class="space-y-3 text-xs">
+          <div>
+            <label
+              class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Category</label
+            >
+            <select
+              id="post-type"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            >
+              <option value="PR Break">🏆 PR Personal Record</option>
+              <option value="Gym Selfie">📸 Gym Selfie</option>
+              <option value="Progress Milestone">🎯 Progress Milestone</option>
+              <option value="Daily Motivation">🔥 Daily Motivation</option>
+            </select>
+          </div>
+          <div>
+            <label
+              class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >PR Highlight (optional)</label
+            >
+            <input
+              type="text"
+              id="post-pr"
+              placeholder="Deadlift 405 lbs x 3"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            />
+          </div>
+          <div>
+            <label
+              class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Image</label
+            >
+            <select
+              id="post-image-preset"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            >
+              <option
+                value="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80"
+              >
+                🏋️ Heavy Barbell
+              </option>
+              <option
+                value="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80"
+              >
+                💪 Dumbbells
+              </option>
+              <option
+                value="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=800&q=80"
+              >
+                🏃 Morning Run
+              </option>
+              <option
+                value="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80"
+              >
+                🥗 Protein Bowl
+              </option>
+            </select>
+          </div>
+          <div>
+            <label
+              class="block font-bold uppercase text-slate-600 dark:text-slate-300 mb-1"
+              >Caption</label
+            >
+            <textarea
+              id="post-caption"
+              required
+              rows="3"
+              placeholder="Share your grind..."
+              class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl"
+          >
+            Publish Post
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+     APPLICATION JAVASCRIPT
+     No optional chaining. No ES2020+ syntax. Runs in any modern browser.
+     ===================================================================== -->
+    <script>
+      /* ---------- SAFE STORAGE HELPERS ---------- */
+      function safeGet(key, fallback) {
+        try {
+          var raw = window.localStorage.getItem(key);
+          if (raw === null || raw === undefined) return fallback;
+          return JSON.parse(raw);
+        } catch (e) {
+          return fallback;
+        }
+      }
+      function safeSet(key, value) {
+        try { window.localStorage.setItem(key, JSON.stringify(value)); }
+        catch (e) { /* storage unavailable */ }
+      }
+      function safeGetRaw(key) {
+        try { return window.localStorage.getItem(key); }
+        catch (e) { return null; }
+      }
+
+      /* ---------- DATE HELPERS (local time, never UTC) ---------- */
+      function fmtDate(d) {
+        var y = d.getFullYear();
+        var m = (d.getMonth() + 1 < 10 ? '0' : '') + (d.getMonth() + 1);
+        var day = (d.getDate() < 10 ? '0' : '') + d.getDate();
+        return y + '-' + m + '-' + day;
+      }
+      function parseDate(str) {
+        var p = String(str).split('-');
+        return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+      }
+      function todayStr() { return fmtDate(new Date()); }
+
+      /* ---------- ESCAPE HTML (safety) ---------- */
+      function esc(v) {
+        if (v === null || v === undefined) return '';
+        return String(v)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      /* ============================================================
+         APP STATE
+         ============================================================ */
+      var TODAY = todayStr();
+      var CAL_YEAR = new Date().getFullYear();
+
+      var userProfile = safeGet('fitlife_user_profile', null);
+      var isDarkMode = safeGetRaw('fitlife_theme') === 'dark';
+
+      var currentLogDateStr = TODAY;
+      var selectedJournalDay = null;
+
+      var CARB_TARGET = 220;
+      var FAT_TARGET = 70;
+
+      var mealsData = safeGet('fitlife_meals', [
+        { id: 101, date: TODAY, mealType: 'breakfast', name: 'Oatmeal & Protein Scoop',
+          calories: 420, protein: 32, carbs: 55, fats: 8 },
+        { id: 102, date: TODAY, mealType: 'lunch', name: 'Grilled Chicken & Sweet Potato',
+          calories: 580, protein: 48, carbs: 62, fats: 12 }
+      ]);
+
+      var journalData = safeGet('fitlife_journal', {});
+      journalData[TODAY] = journalData[TODAY] || {
+        workout: 'Leg Day: Squats 275lbs (4x6), RDLs (3x10)',
+        mindset: 'Drank 3L water, slept 8 hrs',
+        water: 3, sleep: 8,
+        mood: '🔥 Amazing - Crushed it!'
+      };
+
+      var showroomPosts = safeGet('fitlife_posts', [
+        {
+          id: 1, author: 'Alex Morgan', avatar: 'A', type: 'PR Break',
+          prHighlight: 'Deadlift: 405 lbs x 2 reps',
+          image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=800&q=80',
+          caption: 'Hit a huge milestone! Finally locked out 4 plates on deadlift.',
+          likes: 34, liked: false,
+          comments: [
+            { author: 'Coach Frank', text: 'Monster pull! Form was locked in! 🔥' },
+            { author: 'Marcus V.', text: 'Easy work champ!' }
+          ],
+          time: '2 hours ago'
+        },
+        {
+          id: 2, author: 'Sarah Vance', avatar: 'S', type: 'Progress Milestone',
+          prHighlight: 'Completed 10K Run @ 48 mins',
+          image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
+          caption: 'Morning cardio done before the sun came up!',
+          likes: 28, liked: false,
+          comments: [{ author: 'Jessica T.', text: 'Inspirational speed!' }],
+          time: '5 hours ago'
+        }
+      ]);
+
+      var commentDrafts = {};
+
+      /* ============================================================
+         THEME
+         ============================================================ */
+      function applyTheme() {
+        var root = document.documentElement;
+        if (isDarkMode) root.classList.add('dark');
+        else root.classList.remove('dark');
+
+        var icon = document.getElementById('theme-icon');
+        if (icon) {
+          icon.className = isDarkMode
+            ? 'fa-solid fa-moon text-indigo-400'
+            : 'fa-solid fa-sun text-amber-500';
+        }
+      }
+      function toggleTheme() {
+        isDarkMode = !isDarkMode;
+        try { window.localStorage.setItem('fitlife_theme', isDarkMode ? 'dark' : 'light'); }
+        catch (e) {}
+        applyTheme();
+      }
+
+      /* ============================================================
+         MODALS
+         ============================================================ */
+      function openModal(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.remove('hidden');
+      }
+      function closeModal(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      }
+
+      /* ============================================================
+         PROFILE
+         ============================================================ */
+      function refreshProfileUI() {
+        if (!userProfile) return;
+        var initial = (userProfile.name || 'A').charAt(0).toUpperCase();
+        document.getElementById('nav-greeting').innerText = 'Welcome, ' + userProfile.name + '!';
+        document.getElementById('nav-goal-badge').innerText = 'Goal: ' + userProfile.goal;
+        document.getElementById('user-avatar-badge').innerText = initial;
+        document.getElementById('user-avatar-badge-mobile').innerText = initial;
+        document.getElementById('target-calories-text').innerText = userProfile.calories;
+        document.getElementById('target-protein-text').innerText = userProfile.protein;
+      }
+
+      function checkOnboarding() {
+        var modal = document.getElementById('onboarding-modal');
+        if (!userProfile) {
+          modal.classList.remove('hidden');
+        } else {
+          modal.classList.add('hidden');
+          refreshProfileUI();
+        }
+      }
+
+      function handleOnboardingSubmit(e) {
+        e.preventDefault();
+        userProfile = {
+          name: document.getElementById('onboard-name').value.trim() || 'Athlete',
+          goal: document.getElementById('onboard-goal').value,
+          calories: parseInt(document.getElementById('onboard-calories').value, 10) || 2300,
+          protein: parseInt(document.getElementById('onboard-protein').value, 10) || 160
+        };
+        safeSet('fitlife_user_profile', userProfile);
+        document.getElementById('onboarding-modal').classList.add('hidden');
+        refreshProfileUI();
+        renderMeals();
+      }
+
+      function openEditProfile() {
+        if (!userProfile) {
+          document.getElementById('onboarding-modal').classList.remove('hidden');
+          return;
+        }
+        document.getElementById('edit-name').value = userProfile.name;
+        document.getElementById('edit-goal').value = userProfile.goal;
+        document.getElementById('edit-calories').value = userProfile.calories;
+        document.getElementById('edit-protein').value = userProfile.protein;
+        openModal('edit-profile-modal');
+      }
+
+      function handleProfileSave(e) {
+        e.preventDefault();
+        if (!userProfile) return;
+        userProfile.name = document.getElementById('edit-name').value.trim() || userProfile.name;
+        userProfile.goal = document.getElementById('edit-goal').value;
+        userProfile.calories = parseInt(document.getElementById('edit-calories').value, 10) || 2300;
+        userProfile.protein = parseInt(document.getElementById('edit-protein').value, 10) || 160;
+        safeSet('fitlife_user_profile', userProfile);
+        closeModal('edit-profile-modal');
+        refreshProfileUI();
+        renderMeals();
+      }
+
+      /* ============================================================
+         NAVIGATION
+         ============================================================ */
+      function switchView(name) {
+        var sections = document.querySelectorAll('.view-section');
+        for (var i = 0; i < sections.length; i++) sections[i].classList.add('hidden');
+        var target = document.getElementById('view-' + name);
+        if (target) target.classList.remove('hidden');
+
+        var btns = document.querySelectorAll('.nav-btn');
+        for (var j = 0; j < btns.length; j++) {
+          btns[j].className = 'nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/50';
+        }
+        var active = document.getElementById('nav-' + name);
+        if (active) {
+          active.className = 'nav-btn w-full flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400';
+        }
+
+        if (name === 'calendar') renderCalendar();
+        if (name === 'showroom') renderShowroom();
+
+        if (window.innerWidth < 1024) {
+          document.getElementById('sidebar').classList.add('-translate-x-full');
+        }
+      }
+      function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('-translate-x-full');
+      }
+
+      /* ============================================================
+         MEALS
+         ============================================================ */
+      function refreshDateLabel() {
+        var lbl = document.getElementById('current-log-date');
+        lbl.innerText = (currentLogDateStr === todayStr()) ? 'Today' : currentLogDateStr;
+      }
+      function changeLogDate(offset) {
+        var d = parseDate(currentLogDateStr);
+        d.setDate(d.getDate() + offset);
+        currentLogDateStr = fmtDate(d);
+        refreshDateLabel();
+        renderMeals();
+      }
+      function renderMeals() {
+        var dayMeals = [];
+        for (var i = 0; i < mealsData.length; i++) {
+          if (mealsData[i].date === currentLogDateStr) dayMeals.push(mealsData[i]);
+        }
+
+        var cats = ['breakfast', 'lunch', 'dinner', 'snack'];
+        var totals = { calories: 0, protein: 0, carbs: 0, fats: 0 };
+
+        for (var c = 0; c < cats.length; c++) {
+          var cat = cats[c];
+          var listEl = document.getElementById('meal-list-' + cat);
+          var catCals = 0;
+          var html = '';
+          for (var m = 0; m < dayMeals.length; m++) {
+            var meal = dayMeals[m];
+            if (meal.mealType !== cat) continue;
+            catCals += meal.calories;
+            totals.calories += meal.calories;
+            totals.protein += meal.protein;
+            totals.carbs += meal.carbs;
+            totals.fats += meal.fats;
+            html += '<div class="flex justify-between items-center bg-slate-50 dark:bg-slate-700/40 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/60">'
+                  + '<div>'
+                  + '<span class="font-bold text-slate-800 dark:text-slate-200">' + esc(meal.name) + '</span>'
+                  + '<div class="text-[10px] text-slate-400">P: ' + meal.protein + 'g | C: ' + meal.carbs + 'g | F: ' + meal.fats + 'g</div>'
+                  + '</div>'
+                  + '<div class="flex items-center space-x-2">'
+                  + '<span class="font-bold text-slate-700 dark:text-slate-300">' + meal.calories + ' kcal</span>'
+                  + '<button onclick="deleteMeal(' + meal.id + ')" class="text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>'
+                  + '</div>'
+                  + '</div>';
+          }
+          if (!html) html = '<div class="text-slate-400 italic py-1 text-[11px]">No items logged</div>';
+          listEl.innerHTML = html;
+          document.getElementById('cals-' + cat).innerText = catCals + ' kcal';
+        }
+
+        var targetCal = userProfile ? userProfile.calories : 2300;
+        var targetPro = userProfile ? userProfile.protein : 160;
+
+        document.getElementById('macro-calories-val').innerText = totals.calories;
+        document.getElementById('macro-protein-val').innerText = totals.protein;
+        document.getElementById('macro-carbs-val').innerText = totals.carbs;
+        document.getElementById('macro-fats-val').innerText = totals.fats;
+
+        document.getElementById('bar-calories').style.width = Math.min(100, (totals.calories / targetCal) * 100) + '%';
+        document.getElementById('bar-protein').style.width  = Math.min(100, (totals.protein / targetPro) * 100) + '%';
+        document.getElementById('bar-carbs').style.width    = Math.min(100, (totals.carbs / CARB_TARGET) * 100) + '%';
+        document.getElementById('bar-fats').style.width     = Math.min(100, (totals.fats / FAT_TARGET) * 100) + '%';
+
+        document.getElementById('side-cals-count').innerText = totals.calories + ' / ' + targetCal + ' kcal';
+        document.getElementById('side-cals-bar').style.width = Math.min(100, (totals.calories / targetCal) * 100) + '%';
+        document.getElementById('side-p').innerText = totals.protein + 'g';
+        document.getElementById('side-c').innerText = totals.carbs + 'g';
+        document.getElementById('side-f').innerText = totals.fats + 'g';
+      }
+      function handleMealSubmit(e) {
+        e.preventDefault();
+        mealsData.push({
+          id: Date.now(),
+          date: currentLogDateStr,
+          mealType: document.getElementById('meal-type').value,
+          name: document.getElementById('meal-name').value.trim(),
+          calories: parseInt(document.getElementById('meal-cals').value, 10) || 0,
+          protein: parseInt(document.getElementById('meal-protein').value, 10) || 0,
+          carbs: parseInt(document.getElementById('meal-carbs').value, 10) || 0,
+          fats: parseInt(document.getElementById('meal-fats').value, 10) || 0
+        });
+        safeSet('fitlife_meals', mealsData);
+        closeModal('add-meal-modal');
+        e.target.reset();
+        renderMeals();
+      }
+      function deleteMeal(id) {
+        if (!confirm('Delete this food entry?')) return;
+        var next = [];
+        for (var i = 0; i < mealsData.length; i++) {
+          if (mealsData[i].id !== id) next.push(mealsData[i]);
+        }
+        mealsData = next;
+        safeSet('fitlife_meals', mealsData);
+        renderMeals();
+      }
+
+      /* ============================================================
+         CALENDAR
+         ============================================================ */
+      function setupMonthOptions() {
+        var months = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+        var sel = document.getElementById('calendar-month-select');
+        var html = '';
+        for (var i = 0; i < months.length; i++) {
+          html += '<option value="' + i + '">' + months[i] + '</option>';
+        }
+        sel.innerHTML = html;
+        sel.value = String(new Date().getMonth());
+      }
+      function streakCount() {
+        var logged = {};
+        for (var k in journalData) {
+          if (Object.prototype.hasOwnProperty.call(journalData, k)) logged[k] = true;
+        }
+        var cursor = new Date();
+        if (!logged[fmtDate(cursor)]) {
+          cursor.setDate(cursor.getDate() - 1);
+          if (!logged[fmtDate(cursor)]) return 0;
+        }
+        var streak = 0;
+        while (logged[fmtDate(cursor)]) {
+          streak++;
+          cursor.setDate(cursor.getDate() - 1);
+        }
+        return streak;
+      }
+      function renderCalendar() {
+        var monthIdx = parseInt(document.getElementById('calendar-month-select').value, 10) || 0;
+        var grid = document.getElementById('calendar-days-grid');
+        grid.innerHTML = '';
+        document.getElementById('calendar-year-badge').innerText = 'Year ' + CAL_YEAR;
+
+        var firstDay = new Date(CAL_YEAR, monthIdx, 1).getDay();
+        var daysInMonth = new Date(CAL_YEAR, monthIdx + 1, 0).getDate();
+        var tStr = todayStr();
+
+        for (var p = 0; p < firstDay; p++) {
+          var empty = document.createElement('div');
+          empty.className = 'h-20 bg-slate-100/50 dark:bg-slate-800/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700/50 opacity-40';
+          grid.appendChild(empty);
+        }
+
+        var loggedInMonth = 0;
+        for (var d = 1; d <= daysInMonth; d++) {
+          var mm = (monthIdx + 1 < 10 ? '0' : '') + (monthIdx + 1);
+          var dd = (d < 10 ? '0' : '') + d;
+          var dateStr = CAL_YEAR + '-' + mm + '-' + dd;
+          var entry = journalData[dateStr];
+          if (entry) loggedInMonth++;
+          var isToday = (dateStr === tStr);
+
+          var cell = document.createElement('div');
+          cell.className = 'calendar-grid-cell h-20 p-2 rounded-2xl border flex flex-col justify-between cursor-pointer '
+            + (entry
+                ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-800 dark:text-emerald-300'
+                : 'bg-slate-50 dark:bg-slate-700/30 border-slate-200 dark:border-slate-700 hover:border-emerald-400')
+            + (isToday ? ' ring-2 ring-emerald-500' : '');
+
+          var preview = entry ? (entry.workout ? '🏋️ ' + esc(entry.workout) : '📝 Note saved') : '';
+          cell.innerHTML = '<div class="flex justify-between items-center">'
+            + '<span class="font-extrabold text-xs">' + d + '</span>'
+            + (entry ? '<span class="text-xs text-emerald-500"><i class="fa-solid fa-circle-check"></i></span>' : '')
+            + '</div>'
+            + '<div class="text-[9px] truncate text-slate-500 dark:text-slate-400">' + preview + '</div>';
+
+          (function (ds) {
+            cell.onclick = function () { openJournal(ds); };
+          })(dateStr);
+
+          grid.appendChild(cell);
+        }
+
+        var totalThisYear = 0;
+        for (var k2 in journalData) {
+          if (Object.prototype.hasOwnProperty.call(journalData, k2) && k2.indexOf(String(CAL_YEAR)) === 0) {
+            totalThisYear++;
+          }
+        }
+        document.getElementById('journal-total-logged').innerText = totalThisYear + ' / 365 Days';
+        document.getElementById('journal-streak').innerText = streakCount() + ' Days';
+        document.getElementById('journal-active-rate').innerText = Math.round((loggedInMonth / daysInMonth) * 100) + '%';
+      }
+      function openJournal(dateStr) {
+        selectedJournalDay = dateStr;
+        document.getElementById('journal-modal-date').innerText = 'Date: ' + dateStr;
+        var e = journalData[dateStr] || {};
+        document.getElementById('journal-workout').value = e.workout || '';
+        document.getElementById('journal-mindset').value = e.mindset || '';
+        document.getElementById('journal-water').value = e.water || 2.5;
+        document.getElementById('journal-sleep').value = e.sleep || 7.5;
+        document.getElementById('journal-mood').value = e.mood || '🔥 Amazing - Crushed it!';
+        openModal('journal-modal');
+      }
+      function handleJournalSave(e) {
+        e.preventDefault();
+        if (!selectedJournalDay) return;
+        journalData[selectedJournalDay] = {
+          workout: document.getElementById('journal-workout').value.trim(),
+          mindset: document.getElementById('journal-mindset').value.trim(),
+          water: parseFloat(document.getElementById('journal-water').value) || 0,
+          sleep: parseFloat(document.getElementById('journal-sleep').value) || 0,
+          mood: document.getElementById('journal-mood').value
+        };
+        safeSet('fitlife_journal', journalData);
+        closeModal('journal-modal');
+        renderCalendar();
+      }
+      function clearJournal() {
+        if (!selectedJournalDay) return;
+        if (!journalData[selectedJournalDay]) { closeModal('journal-modal'); return; }
+        if (!confirm("Clear this day's journal entry?")) return;
+        delete journalData[selectedJournalDay];
+        safeSet('fitlife_journal', journalData);
+        closeModal('journal-modal');
+        renderCalendar();
+      }
+
+      /* ============================================================
+         SHOWROOM
+         ============================================================ */
+      function renderShowroom() {
+        var container = document.getElementById('showroom-feed-list');
+        var html = '';
+        for (var i = 0; i < showroomPosts.length; i++) {
+          var p = showroomPosts[i];
+          var commentsHtml = '';
+          var comments = p.comments || [];
+          for (var c = 0; c < comments.length; c++) {
+            commentsHtml += '<div class="bg-slate-50 dark:bg-slate-700/50 p-2.5 rounded-xl text-xs space-x-1">'
+              + '<span class="font-bold text-slate-800 dark:text-slate-200">' + esc(comments[c].author) + ':</span>'
+              + '<span class="text-slate-600 dark:text-slate-300">' + esc(comments[c].text) + '</span>'
+              + '</div>';
+          }
+          var draft = commentDrafts[p.id] || '';
+          var likedClass = p.liked
+            ? 'text-emerald-600 dark:text-emerald-400'
+            : 'text-slate-500 hover:text-emerald-500';
+
+          html += '<div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 shadow-sm space-y-4">'
+
+            + '<div class="flex justify-between items-center">'
+            + '<div class="flex items-center space-x-3">'
+            + '<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-white font-black flex items-center justify-center text-sm">' + esc(p.avatar) + '</div>'
+            + '<div>'
+            + '<h4 class="font-bold text-slate-900 dark:text-white text-sm">' + esc(p.author) + '</h4>'
+            + '<span class="text-[10px] text-slate-400">' + esc(p.time) + '</span>'
+            + '</div></div>'
+            + '<span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-full text-[10px] font-bold border border-emerald-200 dark:border-emerald-800">' + esc(p.type) + '</span>'
+            + '</div>'
+
+            + (p.prHighlight ? ('<div class="p-3 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-2xl flex items-center space-x-3">'
+                + '<div class="text-xl text-emerald-500"><i class="fa-solid fa-trophy"></i></div>'
+                + '<div><div class="text-[10px] uppercase font-bold text-slate-400">Personal Record</div>'
+                + '<div class="font-black text-slate-900 dark:text-white text-sm">' + esc(p.prHighlight) + '</div></div></div>') : '')
+
+            + '<p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">' + esc(p.caption) + '</p>'
+
+            + (p.image ? ('<div class="rounded-2xl overflow-hidden max-h-72 border border-slate-100 dark:border-slate-700">'
+                + '<img src="' + esc(p.image) + '" alt="Post" class="w-full h-full object-cover" onerror="this.parentElement.style.display=\'none\'">'
+                + '</div>') : '')
+
+            + '<div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-700 pt-3 text-xs">'
+            + '<button onclick="hypePost(' + p.id + ')" class="flex items-center space-x-1.5 font-bold ' + likedClass + '">'
+            + '<i class="fa-solid fa-fire text-base"></i><span>' + p.likes + ' Hypes</span></button>'
+            + '<span class="text-slate-400">' + comments.length + ' Comments</span>'
+            + '</div>'
+
+            + '<div class="space-y-2 pt-1">' + commentsHtml
+            + '<div class="flex space-x-2 pt-1">'
+            + '<input type="text" id="comment-input-' + p.id + '" value="' + esc(draft) + '"'
+            + ' oninput="commentDrafts[' + p.id + ']=this.value"'
+            + ' onkeypress="if(event.key===\'Enter\'){event.preventDefault();addComment(' + p.id + ');}"'
+            + ' placeholder="Write a comment..."'
+            + ' class="flex-1 px-3 py-2 text-xs border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white">'
+            + '<button onclick="addComment(' + p.id + ')" class="px-3 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold">Reply</button>'
+            + '</div></div>'
+
+            + '</div>';
+        }
+        container.innerHTML = html;
+      }
+      function handlePostSubmit(e) {
+        e.preventDefault();
+        var author = userProfile ? userProfile.name : 'Athletic Member';
+        showroomPosts.unshift({
+          id: Date.now(),
+          author: author,
+          avatar: author.charAt(0).toUpperCase(),
+          type: document.getElementById('post-type').value,
+          prHighlight: document.getElementById('post-pr').value.trim(),
+          image: document.getElementById('post-image-preset').value,
+          caption: document.getElementById('post-caption').value.trim(),
+          likes: 1,
+          liked: true,
+          comments: [],
+          time: 'Just now'
+        });
+        safeSet('fitlife_posts', showroomPosts);
+        closeModal('create-post-modal');
+        e.target.reset();
+        renderShowroom();
+      }
+      function hypePost(id) {
+        for (var i = 0; i < showroomPosts.length; i++) {
+          if (showroomPosts[i].id === id) {
+            var p = showroomPosts[i];
+            p.liked = !p.liked;
+            p.likes += p.liked ? 1 : -1;
+            break;
+          }
+        }
+        safeSet('fitlife_posts', showroomPosts);
+        renderShowroom();
+      }
+      function addComment(id) {
+        var input = document.getElementById('comment-input-' + id);
+        if (!input) return;
+        var text = input.value.trim();
+        if (!text) return;
+        for (var i = 0; i < showroomPosts.length; i++) {
+          if (showroomPosts[i].id === id) {
+            if (!showroomPosts[i].comments) showroomPosts[i].comments = [];
+            showroomPosts[i].comments.push({
+              author: userProfile ? userProfile.name : 'You',
+              text: text
+            });
+            break;
+          }
+        }
+        delete commentDrafts[id];
+        safeSet('fitlife_posts', showroomPosts);
+        renderShowroom();
+      }
+
+      /* ============================================================
+         COACH FRANK
+         ============================================================ */
+      function toggleCoach() {
+        var d = document.getElementById('coach-chat-drawer');
+        d.classList.toggle('hidden');
+      }
+      function closeCoach() {
+        document.getElementById('coach-chat-drawer').classList.add('hidden');
+      }
+      function quickPrompt(text) {
+        document.getElementById('coach-user-input').value = text;
+        askCoach();
+      }
+      function appendMsg(sender, html, id) {
+        var box = document.getElementById('coach-messages-container');
+        var div = document.createElement('div');
+        if (id) div.id = id;
+
+        if (sender === 'user') {
+          div.className = 'flex items-start justify-end space-x-2';
+          div.innerHTML = '<div class="bg-emerald-600 text-white p-3 rounded-2xl max-w-[82%] break-words">' + html + '</div>';
+        } else if (sender === 'loading') {
+          div.className = 'flex items-start space-x-2';
+          div.innerHTML = '<div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">F</div>'
+            + '<div class="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-400 italic animate-pulse max-w-[82%]">' + esc(html) + '</div>';
+        } else {
+          div.className = 'flex items-start space-x-2';
+          div.innerHTML = '<div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">F</div>'
+            + '<div class="bg-white dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 max-w-[82%] break-words">' + html + '</div>';
+        }
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+      }
+      function askCoach() {
+        var input = document.getElementById('coach-user-input');
+        var q = input.value.trim();
+        if (!q) return;
+        appendMsg('user', esc(q));
+        input.value = '';
+
+        var loadingId = 'coach-loading-' + Date.now();
+        appendMsg('loading', 'Coach Frank is thinking...', loadingId);
+
+        setTimeout(function () {
+          var el = document.getElementById(loadingId);
+          if (el) el.remove();
+          appendMsg('coach', offlineAdvice(q));
+        }, 500);
+      }
+      function offlineAdvice(q) {
+        q = String(q).toLowerCase();
+        if (q.indexOf('split') >= 0 || q.indexOf('workout') >= 0 || q.indexOf('routine') >= 0) {
+          return "<strong>4-Day Upper/Lower Split:</strong><br>• Mon: Upper (Bench, Rows, OHP)<br>• Tue: Lower (Squats, RDLs)<br>• Thu: Upper Hypertrophy<br>• Fri: Lower &amp; Core<br>Rest and hydrate!";
+        }
+        if (q.indexOf('protein') >= 0 || q.indexOf('macro') >= 0) {
+          return "<strong>Protein Rule:</strong><br>Aim for 0.8g–1.0g per pound of target body weight. Spread over 3–4 meals for max muscle protein synthesis.";
+        }
+        if (q.indexOf('post') >= 0 || q.indexOf('meal') >= 0) {
+          return "<strong>Post-Workout Fuel:</strong><br>• 30–50g fast protein<br>• 40–60g carbs (rice, oats, fruit)<br>• Keep fat low right after training<br>Eat within 60–90 min.";
+        }
+        if (q.indexOf('squat') >= 0 || q.indexOf('form') >= 0) {
+          return "<strong>Squat Checklist:</strong><br>1. Brace your core deep<br>2. Knees track over toes<br>3. Drive off the full foot, not just toes<br>Stay tight champ!";
+        }
+        return "Great question! Stay consistent with progressive overload, hit your protein goal, and prioritize 7–8 hours of sleep. Keep grinding!";
+      }
+
+      /* ============================================================
+         INIT
+         ============================================================ */
+      function initApp() {
+        applyTheme();
+        setupMonthOptions();
+        checkOnboarding();
+        refreshDateLabel();
+        renderMeals();
+        renderCalendar();
+        renderShowroom();
+      }
+
+      // Attach form listeners
+      document.getElementById('onboarding-form').addEventListener('submit', handleOnboardingSubmit);
+      document.getElementById('edit-profile-form').addEventListener('submit', handleProfileSave);
+      document.getElementById('add-meal-form').addEventListener('submit', handleMealSubmit);
+      document.getElementById('journal-form').addEventListener('submit', handleJournalSave);
+      document.getElementById('create-post-form').addEventListener('submit', handlePostSubmit);
+      document.getElementById('calendar-month-select').addEventListener('change', renderCalendar);
+
+      // Boot when DOM is ready (works whether or not the page has fully loaded)
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApp);
+      } else {
+        initApp();
+      }
+    </script>
+  </body>
+</html>
